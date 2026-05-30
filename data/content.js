@@ -55,13 +55,13 @@ export const services = [
 // "featured: true" memberi tanda/garis hijau "Terpopuler".
 export const methods = [
   {
-    title: "🔹 Smart Klamp",
-    points: ["Tanpa jahitan", "Minim perdarahan", "Proses ± 7–10 menit", "Cocok untuk bayi & anak"],
-  },
-  {
-    title: "🔸 Laser / Electric Cauter",
+    title: "🔸 Super Ring",
     featured: true,
     tag: "Terpopuler",
+    points: ["Tanpa jahitan dan perban", "Minim pendarahan", "Bebas mandi", "Cocok untuk semua umur"],
+  },
+  {
+    title: "🔹 Laser / Electric Cauter",
     points: ["Luka lebih kering", "Risiko perdarahan kecil", "Pemulihan lebih cepat", "Cocok hampir semua usia"],
   },
   {
@@ -87,16 +87,16 @@ export const advantages = [
 export const pricing = [
   {
     name: "Paket Hemat",
-    price: "Rp 650",
+    price: "Rp 600–750",
     unit: "rb",
     sub: "Metode Konvensional",
     features: ["Tindakan oleh tenaga medis", "Bius lokal", "Obat & perawatan dasar", "Kontrol 1x gratis"],
   },
   {
     name: "Paket Premium",
-    price: "Rp 1.2",
+    price: "Rp 1–1,5",
     unit: "jt",
-    sub: "Metode Laser / Cauter",
+    sub: "Metode Super Ring / Laser",
     popular: true,
     features: ["Ditangani operator", "Luka kering & cepat sembuh", "Paket obat lengkap", "Celana khitan + sertifikat", "Kontrol 2x gratis"],
   },
@@ -119,7 +119,7 @@ export const testimonials = [
 // ---- FAQ (pertanyaan yang sering ditanya) ----
 export const faqs = [
   { q: "Apakah khitan terasa sakit?", a: "Kami menggunakan bius lokal modern sehingga anak hanya merasakan sedikit tidak nyaman saat penyuntikan. Selama tindakan, area sudah mati rasa." },
-  { q: "Berapa lama proses khitannya?", a: "Tergantung metode. Smart Klamp ± 7–10 menit, laser/cauter ± 15–20 menit, konvensional ± 20–30 menit." },
+  { q: "Berapa lama proses khitannya?", a: "Tergantung metode. Super Ring ± 7–10 menit, laser/cauter ± 15–20 menit, konvensional ± 20–30 menit." },
   { q: "Berapa lama sampai sembuh total?", a: "Umumnya 5–10 hari tergantung metode dan perawatan. Kami berikan panduan perawatan luka dan kontrol gratis." },
   { q: "Apakah bisa khitan di rumah?", a: "Bisa. Layanan home service kami datang ke lokasi Anda lengkap dengan peralatan steril dan tim medis." },
   { q: "Metode apa yang paling cocok untuk anak saya?", a: "Konsultasikan dulu dengan kami. Tim akan merekomendasikan metode terbaik sesuai usia dan kondisi anak." },
@@ -143,7 +143,7 @@ export const guarantees = [
 
 // ---- Pilihan metode pada form booking cepat ----
 export const bookingMethods = [
-  "Klamp (Smart Klamp)",
+  "Super Ring",
   "Laser / Electric Cauter",
   "Konvensional",
   "Belum tahu, mau konsultasi",
