@@ -17,7 +17,7 @@ export const navLinks = [
 
 // ---- Tulisan kecil & angka di bagian Hero (atas) ----
 export const hero = {
-  badge: "⭐ Rating 4.9/5 dari 10.000+ keluarga",
+  badge: "⭐ Rating 4.9/5 dari 100+ keluarga",
   // Bagian judul yang diberi warna hijau dipisah agar mudah diatur
   titleNormal: "Khitan Modern yang ",
   titleHighlight: "Aman, Minim Nyeri & Cepat Sembuh",
@@ -26,7 +26,7 @@ export const hero = {
   // Poin singkat di bawah tombol (penguat kepercayaan).
   perks: ["Operator bersertifikat", "Alat steril sekali pakai", "Bonus + kontrol gratis"],
   stats: [
-    { value: "10rb+", label: "Anak Terlayani" },
+    { value: "100+", label: "Anak Terlayani" },
     { value: "15+", label: "Tahun Pengalaman" },
     { value: "4.9★", label: "Rating Keluarga" },
   ],

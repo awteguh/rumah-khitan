@@ -16,11 +16,11 @@ export const site = {
   },
 
   // Nomor WhatsApp (format internasional, tanpa "+" dan tanpa "0" depan)
-  waNumber: "6281234567890",
+  waNumber: "6281373733419",
 
   // Nomor telepon untuk tombol "Telepon Kami"
-  phone: "+6281234567890",
-  phoneDisplay: "0812-3456-7890",
+  phone: "+6281373733419",
+  phoneDisplay: "0813-7373-3419",
 
   // Alamat & jam operasional
   address: "Jl. Karangmangun RT 01 RW 10",
