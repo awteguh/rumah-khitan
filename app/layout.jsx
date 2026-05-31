@@ -1,6 +1,7 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import { site } from "@/data/site";
 import StructuredData from "@/components/StructuredData";
+import Analytics from "@/components/Analytics";
 import "./globals.css";
 
 // Memuat font Plus Jakarta Sans (sama seperti versi sebelumnya).
@@ -47,6 +48,7 @@ export default function RootLayout({ children }) {
     <html lang="id" className={jakarta.variable}>
       <body>
         <StructuredData />
+        <Analytics />
         {children}
       </body>
     </html>

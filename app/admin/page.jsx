@@ -1,0 +1,31 @@
+import LogoutButton from "@/components/LogoutButton";
+import Dashboard from "@/components/admin/Dashboard";
+
+// Jangan diindeks Google (halaman privat).
+export const metadata = {
+  title: "Dashboard Pengunjung — Rumah Khitan Abdunnafi'",
+  robots: { index: false, follow: false },
+};
+
+// Halaman tipis: kerangka + judul + tombol keluar. Data & grafik
+// ditangani komponen <Dashboard /> (mengambil data lewat /api/admin/stats).
+export default function AdminPage() {
+  return (
+    <main style={page}>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <div style={header}>
+        <div>
+          <h1 style={h1}>📊 Dashboard Pengunjung</h1>
+          <p style={sub}>Rumah Khitan Abdunnafi' · waktu WIB</p>
+        </div>
+        <LogoutButton />
+      </div>
+      <Dashboard />
+    </main>
+  );
+}
+
+const page = { maxWidth: 960, margin: "0 auto", padding: "32px 20px", fontFamily: "system-ui, sans-serif", color: "#0f172a" };
+const header = { display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, marginBottom: 22 };
+const h1 = { fontSize: 26, fontWeight: 800, margin: "0 0 4px" };
+const sub = { color: "#64748b", margin: 0, fontSize: 14 };
