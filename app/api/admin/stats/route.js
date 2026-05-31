@@ -157,7 +157,9 @@ export async function GET(req) {
   const totalViews = rows.length;
   const uniqueVisitors = new Set(rows.map((r) => r.visitor_id)).size;
   const dayCount = Math.max(1, Math.round(spanDays) || 1);
-  const avgPerDay = Math.round(totalViews / dayCount);
+  // Tampilkan 1 desimal jika kecil (mis. 0,3) agar tidak terlihat "0".
+  const avgRaw = totalViews / dayCount;
+  const avgPerDay = avgRaw < 10 ? Math.round(avgRaw * 10) / 10 : Math.round(avgRaw);
 
   const referrers = topList(refCounts, 6);
   const devices = topList(deviceCounts, 5);

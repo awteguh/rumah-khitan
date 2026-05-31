@@ -44,9 +44,18 @@ export default function Dashboard() {
   const [live, setLive] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
 
-  const rangeRef = useRef(range);   // selalu menyimpan rentang terbaru
+  const rangeRef = useRef(range);   // rentang custom yang sedang dipakai
+  const presetRef = useRef(preset); // pilihan filter terbaru
   const refetchTimer = useRef(null); // untuk menggabungkan banyak ping
   useEffect(() => { rangeRef.current = range; }, [range]);
+  useEffect(() => { presetRef.current = preset; }, [preset]);
+
+  // Rentang "hidup": untuk preset (Hari Ini/7 Hari/30 Hari), batas "sampai"
+  // dihitung ulang ke SEKARANG, agar kunjungan baru selalu ikut terhitung.
+  // Untuk Custom, pakai rentang tetap yang dipilih pengguna.
+  function liveRange() {
+    return presetRef.current === "custom" ? rangeRef.current : presetRange(presetRef.current);
+  }
 
   // Baca status "jangan lacak perangkat ini" saat dibuka.
   useEffect(() => { setDnt(localStorage.getItem("rk_dnt") === "1"); }, []);
@@ -87,7 +96,7 @@ export default function Dashboard() {
       .on("broadcast", { event: "new_view" }, () => {
         // Gabungkan ping yang beruntun → ambil ulang sekali setelah jeda.
         if (refetchTimer.current) clearTimeout(refetchTimer.current);
-        refetchTimer.current = setTimeout(() => fetchData(rangeRef.current, true), 1200);
+        refetchTimer.current = setTimeout(() => fetchData(liveRange(), true), 1200);
       })
       .subscribe((status) => setLive(status === "SUBSCRIBED"));
     return () => {
@@ -98,7 +107,7 @@ export default function Dashboard() {
 
   // ---- Jaring pengaman: segarkan diam-diam tiap 60 detik ----
   useEffect(() => {
-    const id = setInterval(() => fetchData(rangeRef.current, true), 60000);
+    const id = setInterval(() => fetchData(liveRange(), true), 60000);
     return () => clearInterval(id);
   }, [fetchData]);
 
