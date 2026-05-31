@@ -24,7 +24,7 @@ export default function Hero() {
               💬 Konsultasi Gratis via WhatsApp
             </a>
             <a href="#harga" className="btn btn-ghost">
-              Lihat Paket & Harga
+              Lihat Paket & Harga Transparan
             </a>
           </div>
 
@@ -47,7 +47,7 @@ export default function Hero() {
         <div className="hero-card">
           <div className="hero-card-inner">
             <h3>📅 Booking Cepat</h3>
-            <p>Isi data, tim kami hubungi balik &lt; 15 menit. Slot tiap hari terbatas.</p>
+            <p>Isi data sebentar, tim kami telepon balik &lt; 15 menit untuk bantu pilih metode & jadwal. Slot tiap hari terbatas.</p>
             <BookingForm />
             <small className="form-note">Gratis konsultasi • Tanpa biaya tersembunyi • Tanpa komitmen</small>
           </div>

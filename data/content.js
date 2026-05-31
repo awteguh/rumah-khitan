@@ -22,7 +22,7 @@ export const hero = {
   titleNormal: "Khitan Modern yang ",
   titleHighlight: "Aman, Minim Nyeri & Cepat Sembuh",
   lead:
-    "Si kecil tetap tenang, Bapak/Ibu tidak deg-degan. Ditangani operator bersertifikat dengan alat steril sekali pakai dan metode terkini — plus bonus & kontrol GRATIS di setiap booking.",
+    "Si kecil tetap tenang, Bapak/Ibu tak lagi deg-degan. Ditangani operator bersertifikat dengan alat steril sekali pakai dan metode terkini — banyak anak sudah aktif main lagi dalam 3 hari, plus bonus & kontrol GRATIS di setiap booking.",
   // Poin singkat di bawah tombol (penguat kepercayaan).
   perks: ["Operator bersertifikat", "Alat steril sekali pakai", "Bonus + kontrol gratis"],
   stats: [
@@ -43,12 +43,12 @@ export const trustItems = [
 
 // ---- Daftar Layanan ----
 export const services = [
-  { icon: "👶", title: "Khitan Bayi", text: "Penanganan lembut untuk bayi & balita dengan metode klamp yang cepat dan minim trauma." },
-  { icon: "🧒", title: "Khitan Anak", text: "Suasana ramah anak, pendekatan tanpa menakuti, dengan bius lokal yang aman." },
-  { icon: "🧑", title: "Khitan Dewasa", text: "Layanan privat & profesional untuk remaja dan dewasa, termasuk indikasi medis." },
-  { icon: "🏠", title: "Home Service", text: "Khitan di rumah Anda. Tim datang lengkap dengan peralatan steril & higienis." },
-  { icon: "🎉", title: "Paket Khitan Massal", text: "Untuk sekolah, yayasan, atau acara bakti sosial. Harga khusus & terjadwal." },
-  { icon: "💊", title: "Kontrol & Perawatan", text: "Kontrol pasca khitan gratis + panduan perawatan luka hingga sembuh total." },
+  { icon: "👶", title: "Khitan Bayi", text: "Metode klamp khusus bayi: prosesnya cepat, nyaris tanpa darah, dan si kecil minim trauma." },
+  { icon: "🧒", title: "Khitan Anak", text: "Anak diajak ngobrol, bukan ditakuti. Bius lokal modern bikin tindakan terasa nyaman." },
+  { icon: "🧑", title: "Khitan Dewasa", text: "Ruang privat dan penanganan profesional untuk remaja & dewasa, termasuk kebutuhan medis." },
+  { icon: "🏠", title: "Home Service", text: "Tak perlu keluar rumah. Tim datang lengkap dengan alat steril — Anda cukup siapkan ruangan." },
+  { icon: "🎉", title: "Paket Khitan Massal", text: "Untuk sekolah, yayasan, atau bakti sosial. Harga khusus rombongan dan jadwal yang rapi." },
+  { icon: "💊", title: "Kontrol & Perawatan", text: "Kontrol pasca-khitan GRATIS plus panduan perawatan luka sampai sembuh total." },
 ];
 
 // ---- Metode Khitan ----

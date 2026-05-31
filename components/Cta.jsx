@@ -8,10 +8,11 @@ export default function Cta() {
   return (
     <section className="cta" id="kontak">
       <div className="container cta-inner">
-        <h2>Siap Mengkhitan Si Kecil dengan Tenang?</h2>
+        <h2>Khitan Si Kecil Tanpa Drama, Tanpa Deg-degan</h2>
         <p>
-          Konsultasi gratis & tanpa komitmen — tim kami bantu pilih metode dan jadwal terbaik.
-          Booking bulan ini dapat bonus lengkap + kontrol GRATIS. Dibalas &lt; 15 menit.
+          Masih ragu memilih metode? Chat dulu — konsultasi gratis & tanpa komitmen, tim kami
+          bantu pilih metode dan jadwal terbaik untuk anak Anda. Booking bulan ini dapat bonus
+          lengkap + kontrol GRATIS, dan pesan Anda dibalas &lt; 15 menit.
         </p>
 
         <div className="cta-actions">
