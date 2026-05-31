@@ -39,6 +39,16 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [dnt, setDnt] = useState(false);
+
+  // Baca status "jangan lacak perangkat ini" saat dibuka.
+  useEffect(() => { setDnt(localStorage.getItem("rk_dnt") === "1"); }, []);
+  function toggleDnt(e) {
+    const on = e.target.checked;
+    setDnt(on);
+    if (on) localStorage.setItem("rk_dnt", "1");
+    else localStorage.removeItem("rk_dnt");
+  }
 
   const fetchData = useCallback(async (r) => {
     if (!r) return;
@@ -73,6 +83,12 @@ export default function Dashboard() {
 
   return (
     <div>
+      {/* ---- Jangan hitung kunjungan dari perangkat pemilik ---- */}
+      <label style={st.dntRow}>
+        <input type="checkbox" checked={dnt} onChange={toggleDnt} />
+        Jangan hitung kunjungan dari perangkat ini (saya pemilik)
+      </label>
+
       {/* ---- Filter ---- */}
       <div style={st.filterRow}>
         {PRESETS.map((p) => (
@@ -233,6 +249,7 @@ function Stat({ label, value, loading, muted }) {
 }
 
 const st = {
+  dntRow: { display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#64748b", marginBottom: 14, cursor: "pointer" },
   filterRow: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 },
   filterBtn: { padding: "8px 16px", fontSize: 14, fontWeight: 600, color: "#475569", background: "#fff", border: "1px solid #cbd5e1", borderRadius: 999, cursor: "pointer" },
   filterBtnActive: { background: GREEN, color: "#fff", borderColor: GREEN },
