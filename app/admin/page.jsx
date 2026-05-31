@@ -12,7 +12,7 @@ export const metadata = {
 export default function AdminPage() {
   return (
     <main style={page}>
-      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}`}</style>
       <div style={header}>
         <div>
           <h1 style={h1}>📊 Dashboard Pengunjung</h1>

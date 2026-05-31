@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import {
   AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
   PieChart, Pie, Cell,
 } from "recharts";
+import { getSupabaseBrowser } from "@/lib/supabase";
 
 const GREEN = "#16a34a";
 const BLUE = "#0ea5e9";
@@ -40,6 +41,12 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [dnt, setDnt] = useState(false);
+  const [live, setLive] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
+  const rangeRef = useRef(range);   // selalu menyimpan rentang terbaru
+  const refetchTimer = useRef(null); // untuk menggabungkan banyak ping
+  useEffect(() => { rangeRef.current = range; }, [range]);
 
   // Baca status "jangan lacak perangkat ini" saat dibuka.
   useEffect(() => { setDnt(localStorage.getItem("rk_dnt") === "1"); }, []);
@@ -50,24 +57,50 @@ export default function Dashboard() {
     else localStorage.removeItem("rk_dnt");
   }
 
-  const fetchData = useCallback(async (r) => {
+  // silent = pembaruan diam-diam (tanpa spinner besar), dipakai realtime.
+  const fetchData = useCallback(async (r, silent = false) => {
     if (!r) return;
-    setLoading(true);
+    if (!silent) setLoading(true);
     setError("");
     try {
       const res = await fetch(`/api/admin/stats?from=${encodeURIComponent(r.from)}&to=${encodeURIComponent(r.to)}`);
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Gagal memuat data.");
       setData(json);
+      setLastUpdated(new Date());
     } catch (e) {
       setError(e.message);
-      setData(null);
+      if (!silent) setData(null);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   }, []);
 
   useEffect(() => { fetchData(range); }, [range, fetchData]);
+
+  // ---- Realtime: dengar "ping" kunjungan baru dari Supabase ----
+  useEffect(() => {
+    const supabase = getSupabaseBrowser();
+    if (!supabase) return;
+    const channel = supabase
+      .channel("rk-views")
+      .on("broadcast", { event: "new_view" }, () => {
+        // Gabungkan ping yang beruntun → ambil ulang sekali setelah jeda.
+        if (refetchTimer.current) clearTimeout(refetchTimer.current);
+        refetchTimer.current = setTimeout(() => fetchData(rangeRef.current, true), 1200);
+      })
+      .subscribe((status) => setLive(status === "SUBSCRIBED"));
+    return () => {
+      if (refetchTimer.current) clearTimeout(refetchTimer.current);
+      supabase.removeChannel(channel);
+    };
+  }, [fetchData]);
+
+  // ---- Jaring pengaman: segarkan diam-diam tiap 60 detik ----
+  useEffect(() => {
+    const id = setInterval(() => fetchData(rangeRef.current, true), 60000);
+    return () => clearInterval(id);
+  }, [fetchData]);
 
   function choosePreset(p) {
     setPreset(p);
@@ -83,6 +116,15 @@ export default function Dashboard() {
 
   return (
     <div>
+      {/* ---- Status realtime ---- */}
+      <div style={st.statusRow}>
+        <span style={{ ...st.liveDot, background: live ? "#16a34a" : "#cbd5e1", animation: live ? "pulse 1.5s infinite" : "none" }} />
+        <span>{live ? "Realtime aktif — update otomatis" : "Menyambungkan…"}</span>
+        {lastUpdated && (
+          <span style={st.updated}>· diperbarui {lastUpdated.toLocaleTimeString("id-ID")}</span>
+        )}
+      </div>
+
       {/* ---- Jangan hitung kunjungan dari perangkat pemilik ---- */}
       <label style={st.dntRow}>
         <input type="checkbox" checked={dnt} onChange={toggleDnt} />
@@ -249,6 +291,9 @@ function Stat({ label, value, loading, muted }) {
 }
 
 const st = {
+  statusRow: { display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#475569", marginBottom: 10 },
+  liveDot: { width: 9, height: 9, borderRadius: "50%", display: "inline-block", flexShrink: 0 },
+  updated: { color: "#94a3b8" },
   dntRow: { display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#64748b", marginBottom: 14, cursor: "pointer" },
   filterRow: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 },
   filterBtn: { padding: "8px 16px", fontSize: 14, fontWeight: 600, color: "#475569", background: "#fff", border: "1px solid #cbd5e1", borderRadius: 999, cursor: "pointer" },
