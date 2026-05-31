@@ -3,10 +3,12 @@
 import { useEffect, useState, useCallback } from "react";
 import {
   AreaChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
+  PieChart, Pie, Cell,
 } from "recharts";
 
 const GREEN = "#16a34a";
 const BLUE = "#0ea5e9";
+const PIE_COLORS = ["#16a34a", "#0ea5e9", "#f59e0b", "#a855f7", "#ef4444"];
 
 // ---- Pembantu rentang tanggal (memakai waktu browser) ----
 function startOfDay(d) { const x = new Date(d); x.setHours(0, 0, 0, 0); return x; }
@@ -139,23 +141,32 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* ---- Sumber kunjungan ---- */}
-      <section style={st.card}>
-        <h2 style={st.cardTitle}>Sumber Kunjungan Teratas</h2>
-        {data && data.referrers.length > 0 ? (
-          data.referrers.map((r) => (
-            <div key={r.name} style={st.barRow}>
-              <span style={st.barLabel}>{r.name}</span>
-              <div style={st.barTrack}>
-                <div style={{ ...st.barFill, width: `${(r.count / data.referrers[0].count) * 100}%` }} />
-              </div>
-              <span style={st.barValue}>{r.count}</span>
-            </div>
-          ))
-        ) : (
-          <p style={st.empty}>Belum ada data.</p>
-        )}
-      </section>
+      {/* ---- Perangkat (pie) ---- */}
+      <div style={st.breakGrid}>
+        <section style={st.card}>
+          <h2 style={st.cardTitle}>📱 Perangkat</h2>
+          {data && data.devices.length > 0 ? (
+            <ResponsiveContainer width="100%" height={230}>
+              <PieChart>
+                <Pie data={data.devices} dataKey="count" nameKey="name" cx="50%" cy="50%"
+                  innerRadius={48} outerRadius={80} paddingAngle={2}>
+                  {data.devices.map((d, i) => (
+                    <Cell key={d.name} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={{ borderRadius: 10, border: "1px solid #e2e8f0", fontSize: 13 }} />
+                <Legend wrapperStyle={{ fontSize: 12 }} />
+              </PieChart>
+            </ResponsiveContainer>
+          ) : (
+            <p style={st.empty}>Belum ada data.</p>
+          )}
+        </section>
+
+        <BarList title="🌐 Browser" items={data?.browsers} />
+        <BarList title="💻 Sistem Operasi" items={data?.operatingSystems} />
+        <BarList title="🔗 Sumber Kunjungan" items={data?.referrers} />
+      </div>
 
       {/* ---- Kunjungan terbaru ---- */}
       <section style={st.card}>
@@ -163,7 +174,8 @@ export default function Dashboard() {
         <table style={st.table}>
           <thead>
             <tr>
-              <th style={st.th}>Waktu</th><th style={st.th}>Halaman</th><th style={st.th}>Sumber</th>
+              <th style={st.th}>Waktu</th><th style={st.th}>Halaman</th>
+              <th style={st.th}>Perangkat</th><th style={st.th}>Sumber</th>
             </tr>
           </thead>
           <tbody>
@@ -172,16 +184,40 @@ export default function Dashboard() {
                 <tr key={i}>
                   <td style={st.td}>{new Date(r.time).toLocaleString("id-ID", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}</td>
                   <td style={st.td}>{r.path}</td>
+                  <td style={st.td}>{r.device}</td>
                   <td style={st.td}>{r.source}</td>
                 </tr>
               ))
             ) : (
-              <tr><td style={st.td} colSpan={3}>{loading ? "Memuat…" : "Belum ada kunjungan."}</td></tr>
+              <tr><td style={st.td} colSpan={4}>{loading ? "Memuat…" : "Belum ada kunjungan."}</td></tr>
             )}
           </tbody>
         </table>
       </section>
     </div>
+  );
+}
+
+// Daftar batang (dipakai untuk browser, OS, sumber kunjungan).
+function BarList({ title, items }) {
+  const max = items && items.length ? items[0].count : 1;
+  return (
+    <section style={st.card}>
+      <h2 style={st.cardTitle}>{title}</h2>
+      {items && items.length > 0 ? (
+        items.map((r) => (
+          <div key={r.name} style={st.barRow}>
+            <span style={st.barLabel}>{r.name}</span>
+            <div style={st.barTrack}>
+              <div style={{ ...st.barFill, width: `${(r.count / max) * 100}%` }} />
+            </div>
+            <span style={st.barValue}>{r.count}</span>
+          </div>
+        ))
+      ) : (
+        <p style={st.empty}>Belum ada data.</p>
+      )}
+    </section>
   );
 }
 
@@ -210,6 +246,7 @@ const st = {
   statLabel: { color: "#64748b", fontSize: 13, margin: 0 },
   statValue: { fontSize: 28, fontWeight: 800, margin: "6px 0 0" },
   card: { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: 20, marginBottom: 22 },
+  breakGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 0 },
   cardTitle: { fontSize: 16, fontWeight: 700, margin: "0 0 16px" },
   overlay: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,.6)", zIndex: 2 },
   spinner: { width: 34, height: 34, border: "4px solid #e2e8f0", borderTopColor: GREEN, borderRadius: "50%", display: "inline-block", animation: "spin .8s linear infinite" },

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { UAParser } from "ua-parser-js";
 import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 import { getSessionToken, ADMIN_COOKIE } from "@/lib/adminAuth";
 
@@ -58,6 +59,25 @@ function hostnameOf(ref) {
   try { return new URL(ref).hostname.replace(/^www\./, ""); } catch { return ref; }
 }
 
+// Baca user-agent → jenis perangkat, browser, sistem operasi.
+function parseUA(ua) {
+  if (!ua) return { device: "Tidak diketahui", browser: "Tidak diketahui", os: "Tidak diketahui" };
+  const r = new UAParser(ua).getResult();
+  const t = r.device.type; // 'mobile', 'tablet', atau kosong (desktop)
+  const device = t === "mobile" ? "HP / Ponsel" : t === "tablet" ? "Tablet" : "Komputer / Laptop";
+  const browser = (r.browser.name || "Lainnya").replace(/^Mobile /, "");
+  const os = r.os.name || "Lainnya";
+  return { device, browser, os };
+}
+
+// Ubah objek hitungan {nama: jumlah} → array terurut [{name, count}].
+function topList(counts, limit = 8) {
+  return Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
+    .map(([name, count]) => ({ name, count }));
+}
+
 export async function GET(req) {
   // --- Keamanan: hanya admin yang sudah login ---
   const user = process.env.ADMIN_USER;
@@ -92,7 +112,7 @@ export async function GET(req) {
   const [inRange, allTimeRes] = await Promise.all([
     supabase
       .from("page_views")
-      .select("visitor_id, created_at, referrer, path")
+      .select("visitor_id, created_at, referrer, path, user_agent")
       .gte("created_at", from.toISOString())
       .lte("created_at", to.toISOString())
       .order("created_at", { ascending: false })
@@ -114,12 +134,20 @@ export async function GET(req) {
   const views = buckets.map(() => 0);
   const visitorSets = buckets.map(() => new Set());
   const refCounts = {};
+  const deviceCounts = {};
+  const browserCounts = {};
+  const osCounts = {};
 
   for (const r of rows) {
     const i = idx.get(bucketKey(new Date(r.created_at), gran));
     if (i !== undefined) { views[i]++; visitorSets[i].add(r.visitor_id); }
     const h = hostnameOf(r.referrer);
     refCounts[h] = (refCounts[h] || 0) + 1;
+
+    const ua = parseUA(r.user_agent);
+    deviceCounts[ua.device] = (deviceCounts[ua.device] || 0) + 1;
+    browserCounts[ua.browser] = (browserCounts[ua.browser] || 0) + 1;
+    osCounts[ua.os] = (osCounts[ua.os] || 0) + 1;
   }
 
   const series = buckets.map((b, i) => ({
@@ -131,18 +159,20 @@ export async function GET(req) {
   const dayCount = Math.max(1, Math.round(spanDays) || 1);
   const avgPerDay = Math.round(totalViews / dayCount);
 
-  const referrers = Object.entries(refCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 6)
-    .map(([name, count]) => ({ name, count }));
+  const referrers = topList(refCounts, 6);
+  const devices = topList(deviceCounts, 5);
+  const browsers = topList(browserCounts, 6);
+  const operatingSystems = topList(osCounts, 6);
 
   const recent = rows.slice(0, 12).map((r) => ({
     time: r.created_at, path: r.path, source: hostnameOf(r.referrer),
+    device: parseUA(r.user_agent).device,
   }));
 
   return NextResponse.json({
     totalViews, uniqueVisitors, avgPerDay,
     allTime: allTimeRes.count ?? totalViews,
-    granularity: gran, series, referrers, recent,
+    granularity: gran, series, referrers,
+    devices, browsers, operatingSystems, recent,
   });
 }
