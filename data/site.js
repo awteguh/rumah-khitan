@@ -16,7 +16,7 @@ export const site = {
     // Nama lengkap (dipakai di judul, footer, pesan WhatsApp)
     fullName: "Rumah Khitan Abdunnafi'",
     // Lokasi file logo (taruh gambar di folder: public/assets/)
-    logo: "/assets/logo.png",
+    logo: "/assets/logo.jpg",
   },
 
   // Nomor WhatsApp (format internasional, tanpa "+" dan tanpa "0" depan)
