@@ -57,7 +57,7 @@ export const site = {
   promo: {
     enabled: true,
     emoji: "🎁",
-    text: "GRATISSS celana khitan + sertifikat + kontrol 2× untuk setiap booking bulan ini",
+    text: "GRATISSS pilihan hadiah menarik + celana khitan + kontrol 2× untuk setiap booking bulan ini",
     cta: "Klaim Sekarang",
   },
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { site } from "@/data/site";
 import { navLinks } from "@/data/content";
+import ThemeToggle from "./ThemeToggle";
 
 // Bilah navigasi atas. Interaktif, jadi ditandai "use client":
 //  - menambah bayangan saat halaman di-scroll
@@ -39,13 +40,16 @@ export default function Navbar() {
           </a>
         </nav>
 
-        <button
-          className="nav-toggle"
-          aria-label="Buka menu"
-          onClick={() => setMenuOpen((open) => !open)}
-        >
-          ☰
-        </button>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <button
+            className="nav-toggle"
+            aria-label="Buka menu"
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            ☰
+          </button>
+        </div>
       </div>
     </header>
   );

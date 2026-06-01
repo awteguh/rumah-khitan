@@ -27,7 +27,7 @@ export const hero = {
   perks: ["Operator bersertifikat", "Alat steril sekali pakai", "Bonus + kontrol gratis"],
   stats: [
     { value: "100+", label: "Anak Terlayani" },
-    { value: "15+", label: "Tahun Pengalaman" },
+    { value: "5+", label: "Tahun Pengalaman" },
     { value: "4.9★", label: "Rating Keluarga" },
   ],
 };
@@ -94,7 +94,7 @@ export const pricing = [
   },
   {
     name: "Paket Premium",
-    price: "Rp 1–1,5",
+    price: "Rp 1–1.5",
     unit: "jt",
     sub: "Metode Super Ring / Laser",
     popular: true,
@@ -111,9 +111,9 @@ export const pricing = [
 
 // ---- Testimoni ----
 export const testimonials = [
-  { text: "Anak saya nggak nangis sama sekali, prosesnya cepat banget. Operatornya sabar dan ramah, anak malah diajak ngobrol. Recommended!", author: "Ibu Rina, Jakarta" },
-  { text: "Pakai metode laser, lukanya cepat kering. 3 hari anak sudah aktif main lagi. Bonus celana khitan & kontrolnya benar-benar gratis!", author: "Bapak Andi, Bekasi" },
-  { text: "Home service-nya enak banget, nggak perlu antre. Alatnya steril, tim profesional, dan harga sesuai yang dijanjikan — tanpa biaya tambahan. Puas!", author: "Ibu Sari, Depok" },
+  { text: "Anak saya nggak nangis sama sekali, prosesnya cepat banget. Operatornya sabar dan ramah, anak malah diajak ngobrol. Recommended!", author: "Ibu Murni, Bandung" },
+  { text: "Pakai metode laser, lukanya cepat kering. 3 hari anak sudah aktif main lagi. Bonus celana khitan & kontrolnya benar-benar gratis!", author: "Bapak Andi, Blisuk" },
+  { text: "Home service-nya enak banget, nggak perlu antre. Alatnya steril, tim profesional, dan harga sesuai yang dijanjikan — tanpa biaya tambahan. Puas!", author: "Ibu Ika, Karangmangun" },
 ];
 
 // ---- FAQ (pertanyaan yang sering ditanya) ----
@@ -127,8 +127,8 @@ export const faqs = [
 
 // ---- Bonus yang sudah termasuk di semua paket (promo "bonus gratis") ----
 export const bonuses = [
+  "Pilihan hadiah menarik untuk anak",
   "Celana/sarung khitan",
-  "Sertifikat khitan",
   "Snack & hadiah anak",
   "Panduan perawatan luka",
   "Kontrol pasca-khitan gratis",
