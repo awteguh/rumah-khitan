@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { site } from "@/data/site";
+import ThemeToggle from "@/components/ThemeToggle";
 
 // Halaman login admin dengan tampilan custom (bukan popup browser).
 export default function AdminLoginPage() {
@@ -41,6 +42,9 @@ export default function AdminLoginPage() {
   return (
     <main style={st.wrap}>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      <div style={st.toggleCorner}>
+        <ThemeToggle />
+      </div>
       <form onSubmit={handleSubmit} style={st.card}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={site.brand.logo} alt={`Logo ${site.brand.fullName}`} style={st.logo} />
@@ -107,31 +111,32 @@ export default function AdminLoginPage() {
 }
 
 // ---- Gaya (inline) agar halaman ini mandiri ----
-const GREEN = "#16a34a";
 const st = {
   wrap: {
+    position: "relative",
     minHeight: "100vh",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    background: "linear-gradient(160deg, #f0fdf4 0%, #ecfeff 100%)",
+    background: "linear-gradient(160deg, var(--green-soft) 0%, var(--bg-alt) 100%)",
     padding: 20,
     fontFamily: "system-ui, -apple-system, sans-serif",
   },
+  toggleCorner: { position: "absolute", top: 16, right: 16 },
   card: {
     width: "100%",
     maxWidth: 380,
-    background: "#fff",
+    background: "var(--surface)",
     borderRadius: 20,
     padding: "36px 30px",
-    boxShadow: "0 12px 40px rgba(0,0,0,.10)",
-    border: "1px solid #e2e8f0",
+    boxShadow: "var(--shadow-lg)",
+    border: "1px solid var(--line)",
     display: "flex",
     flexDirection: "column",
   },
   logo: { width: 64, height: 64, borderRadius: 14, objectFit: "cover", alignSelf: "center", marginBottom: 14 },
-  title: { fontSize: 24, fontWeight: 800, textAlign: "center", margin: 0, color: "#0f172a" },
-  subtitle: { fontSize: 13, color: "#64748b", textAlign: "center", margin: "6px 0 22px" },
+  title: { fontSize: 24, fontWeight: 800, textAlign: "center", margin: 0, color: "var(--text)" },
+  subtitle: { fontSize: 13, color: "var(--muted)", textAlign: "center", margin: "6px 0 22px" },
   error: {
     background: "#fef2f2",
     border: "1px solid #fecaca",
@@ -141,17 +146,19 @@ const st = {
     fontSize: 13,
     marginBottom: 16,
   },
-  label: { display: "block", fontSize: 13, fontWeight: 600, color: "#334155", marginBottom: 14 },
+  label: { display: "block", fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 14 },
   input: {
     width: "100%",
     marginTop: 6,
     marginBottom: 0,
     padding: "12px 14px",
     fontSize: 15,
-    border: "1px solid #cbd5e1",
+    border: "1px solid var(--line)",
     borderRadius: 10,
     outline: "none",
     boxSizing: "border-box",
+    background: "var(--surface-2)",
+    color: "var(--text)",
   },
   passRow: { position: "relative", marginTop: 6 },
   showBtn: {
@@ -161,7 +168,7 @@ const st = {
     transform: "translateY(-50%)",
     background: "transparent",
     border: "none",
-    color: GREEN,
+    color: "var(--green)",
     fontSize: 13,
     fontWeight: 600,
     cursor: "pointer",
@@ -173,7 +180,7 @@ const st = {
     fontSize: 15,
     fontWeight: 700,
     color: "#fff",
-    background: GREEN,
+    background: "var(--green)",
     border: "none",
     borderRadius: 10,
     cursor: "pointer",
@@ -189,5 +196,5 @@ const st = {
     display: "inline-block",
     animation: "spin .7s linear infinite",
   },
-  note: { fontSize: 12, color: "#94a3b8", textAlign: "center", margin: "18px 0 0" },
+  note: { fontSize: 12, color: "var(--muted)", textAlign: "center", margin: "18px 0 0" },
 };

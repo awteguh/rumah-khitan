@@ -43,6 +43,36 @@ export default function Dashboard() {
   const [dnt, setDnt] = useState(false);
   const [live, setLive] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
+  const [theme, setTheme] = useState("light");
+
+  // Ikuti tema (terang/gelap) yang aktif di <html>, termasuk saat tombol 🌙
+  // ditekan selagi dashboard terbuka. Grafik & spinner butuh warna nyata
+  // (SVG tidak bisa membaca variabel CSS), jadi kita pantau perubahannya.
+  useEffect(() => {
+    const root = document.documentElement;
+    const read = () => setTheme(root.getAttribute("data-theme") || "light");
+    read();
+    const obs = new MutationObserver(read);
+    obs.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => obs.disconnect();
+  }, []);
+
+  const dark = theme === "dark";
+  // Warna grafik mengikuti tema (nilainya sama seperti variabel di globals.css).
+  const C = {
+    green: dark ? "#2fb985" : GREEN,
+    axis: dark ? "#9fb2a9" : "#64748b",
+    grid: dark ? "#29382f" : "#eef2f6",
+    track: dark ? "#1e2a25" : "#f1f5f9",
+    tooltip: {
+      borderRadius: 10,
+      border: `1px solid ${dark ? "#29382f" : "#e2e8f0"}`,
+      fontSize: 13,
+      background: dark ? "#18221e" : "#fff",
+      color: dark ? "#e8f0ec" : "#0f172a",
+    },
+    overlay: dark ? "rgba(24,34,30,.6)" : "rgba(255,255,255,.6)",
+  };
 
   const rangeRef = useRef(range);   // rentang custom yang sedang dipakai
   const presetRef = useRef(preset); // pilihan filter terbaru
@@ -127,7 +157,7 @@ export default function Dashboard() {
     <div>
       {/* ---- Status realtime ---- */}
       <div style={st.statusRow}>
-        <span style={{ ...st.liveDot, background: live ? "#16a34a" : "#cbd5e1", animation: live ? "pulse 1.5s infinite" : "none" }} />
+        <span style={{ ...st.liveDot, background: live ? "var(--green)" : "var(--line)", animation: live ? "pulse 1.5s infinite" : "none" }} />
         <span>{live ? "Realtime aktif — update otomatis" : "Menyambungkan…"}</span>
         {lastUpdated && (
           <span style={st.updated}>· diperbarui {lastUpdated.toLocaleTimeString("id-ID")}</span>
@@ -183,22 +213,22 @@ export default function Dashboard() {
       <section style={st.card}>
         <h2 style={st.cardTitle}>Grafik Kunjungan</h2>
         <div style={{ position: "relative", width: "100%", height: 300 }}>
-          {loading && <div style={st.overlay}><span style={st.spinner} /></div>}
+          {loading && <div style={{ ...st.overlay, background: C.overlay }}><span style={st.spinner} /></div>}
           {data && data.series.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data.series} margin={{ top: 10, right: 10, left: -16, bottom: 0 }}>
                 <defs>
                   <linearGradient id="gv" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor={GREEN} stopOpacity={0.35} />
-                    <stop offset="95%" stopColor={GREEN} stopOpacity={0} />
+                    <stop offset="5%" stopColor={C.green} stopOpacity={0.35} />
+                    <stop offset="95%" stopColor={C.green} stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#eef2f6" />
-                <XAxis dataKey="label" tick={{ fontSize: 11, fill: "#64748b" }} interval="preserveStartEnd" />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: "#64748b" }} width={36} />
-                <Tooltip contentStyle={{ borderRadius: 10, border: "1px solid #e2e8f0", fontSize: 13 }} />
+                <CartesianGrid strokeDasharray="3 3" stroke={C.grid} />
+                <XAxis dataKey="label" tick={{ fontSize: 11, fill: C.axis }} interval="preserveStartEnd" />
+                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: C.axis }} width={36} />
+                <Tooltip contentStyle={C.tooltip} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
-                <Area type="monotone" dataKey="views" name="Kunjungan" stroke={GREEN} strokeWidth={2} fill="url(#gv)" />
+                <Area type="monotone" dataKey="views" name="Kunjungan" stroke={C.green} strokeWidth={2} fill="url(#gv)" />
                 <Line type="monotone" dataKey="visitors" name="Pengunjung unik" stroke={BLUE} strokeWidth={2} dot={false} />
               </AreaChart>
             </ResponsiveContainer>
@@ -221,7 +251,7 @@ export default function Dashboard() {
                     <Cell key={d.name} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip contentStyle={{ borderRadius: 10, border: "1px solid #e2e8f0", fontSize: 13 }} />
+                <Tooltip contentStyle={C.tooltip} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
               </PieChart>
             </ResponsiveContainer>
@@ -292,7 +322,7 @@ function Stat({ label, value, loading, muted }) {
   return (
     <div style={st.statCard}>
       <p style={st.statLabel}>{label}</p>
-      <p style={{ ...st.statValue, color: muted ? "#0f172a" : GREEN }}>
+      <p style={{ ...st.statValue, color: muted ? "var(--text)" : "var(--green)" }}>
         {loading ? "…" : (value ?? 0).toLocaleString("id-ID")}
       </p>
     </div>
@@ -300,34 +330,34 @@ function Stat({ label, value, loading, muted }) {
 }
 
 const st = {
-  statusRow: { display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#475569", marginBottom: 10 },
+  statusRow: { display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--muted)", marginBottom: 10 },
   liveDot: { width: 9, height: 9, borderRadius: "50%", display: "inline-block", flexShrink: 0 },
-  updated: { color: "#94a3b8" },
-  dntRow: { display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "#64748b", marginBottom: 14, cursor: "pointer" },
+  updated: { color: "var(--muted)" },
+  dntRow: { display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "var(--muted)", marginBottom: 14, cursor: "pointer" },
   filterRow: { display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 14 },
-  filterBtn: { padding: "8px 16px", fontSize: 14, fontWeight: 600, color: "#475569", background: "#fff", border: "1px solid #cbd5e1", borderRadius: 999, cursor: "pointer" },
-  filterBtnActive: { background: GREEN, color: "#fff", borderColor: GREEN },
-  customRow: { display: "flex", gap: 12, flexWrap: "wrap", alignItems: "flex-end", marginBottom: 16, padding: 16, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12 },
-  customLabel: { display: "flex", flexDirection: "column", fontSize: 12, fontWeight: 600, color: "#475569", gap: 6 },
-  dateInput: { padding: "9px 12px", fontSize: 14, border: "1px solid #cbd5e1", borderRadius: 8 },
-  applyBtn: { padding: "9px 18px", fontSize: 14, fontWeight: 700, color: "#fff", background: GREEN, border: "none", borderRadius: 8, cursor: "pointer" },
+  filterBtn: { padding: "8px 16px", fontSize: 14, fontWeight: 600, color: "var(--text)", background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 999, cursor: "pointer" },
+  filterBtnActive: { background: "var(--green)", color: "#fff", borderColor: "var(--green)" },
+  customRow: { display: "flex", gap: 12, flexWrap: "wrap", alignItems: "flex-end", marginBottom: 16, padding: 16, background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 12 },
+  customLabel: { display: "flex", flexDirection: "column", fontSize: 12, fontWeight: 600, color: "var(--muted)", gap: 6 },
+  dateInput: { padding: "9px 12px", fontSize: 14, border: "1px solid var(--line)", borderRadius: 8, background: "var(--surface-2)", color: "var(--text)" },
+  applyBtn: { padding: "9px 18px", fontSize: 14, fontWeight: 700, color: "#fff", background: "var(--green)", border: "none", borderRadius: 8, cursor: "pointer" },
   error: { background: "#fef2f2", border: "1px solid #fecaca", color: "#b91c1c", borderRadius: 10, padding: "10px 14px", fontSize: 13, marginBottom: 16 },
   grid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: 14, marginBottom: 22 },
-  statCard: { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: "16px 18px", boxShadow: "0 1px 3px rgba(0,0,0,.04)" },
-  statLabel: { color: "#64748b", fontSize: 13, margin: 0 },
+  statCard: { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 14, padding: "16px 18px", boxShadow: "var(--shadow)" },
+  statLabel: { color: "var(--muted)", fontSize: 13, margin: 0 },
   statValue: { fontSize: 28, fontWeight: 800, margin: "6px 0 0" },
-  card: { background: "#fff", border: "1px solid #e2e8f0", borderRadius: 14, padding: 20, marginBottom: 22 },
+  card: { background: "var(--surface)", border: "1px solid var(--line)", borderRadius: 14, padding: 20, marginBottom: 22 },
   breakGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16, marginBottom: 0 },
-  cardTitle: { fontSize: 16, fontWeight: 700, margin: "0 0 16px" },
+  cardTitle: { fontSize: 16, fontWeight: 700, margin: "0 0 16px", color: "var(--text)" },
   overlay: { position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(255,255,255,.6)", zIndex: 2 },
-  spinner: { width: 34, height: 34, border: "4px solid #e2e8f0", borderTopColor: GREEN, borderRadius: "50%", display: "inline-block", animation: "spin .8s linear infinite" },
-  empty: { color: "#94a3b8", fontSize: 14, textAlign: "center", paddingTop: 40 },
+  spinner: { width: 34, height: 34, border: "4px solid var(--line)", borderTopColor: "var(--green)", borderRadius: "50%", display: "inline-block", animation: "spin .8s linear infinite" },
+  empty: { color: "var(--muted)", fontSize: 14, textAlign: "center", paddingTop: 40 },
   barRow: { display: "flex", alignItems: "center", gap: 12, marginBottom: 10 },
-  barLabel: { width: 160, fontSize: 13, color: "#475569", flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
-  barTrack: { flex: 1, background: "#f1f5f9", borderRadius: 6, height: 22, overflow: "hidden" },
-  barFill: { background: GREEN, height: "100%", borderRadius: 6, minWidth: 2 },
-  barValue: { width: 40, textAlign: "right", fontSize: 13, fontWeight: 600 },
+  barLabel: { width: 160, fontSize: 13, color: "var(--muted)", flexShrink: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+  barTrack: { flex: 1, background: "var(--bg-alt)", borderRadius: 6, height: 22, overflow: "hidden" },
+  barFill: { background: "var(--green)", height: "100%", borderRadius: 6, minWidth: 2 },
+  barValue: { width: 40, textAlign: "right", fontSize: 13, fontWeight: 600, color: "var(--text)" },
   table: { width: "100%", borderCollapse: "collapse", fontSize: 13 },
-  th: { textAlign: "left", padding: "8px 10px", borderBottom: "2px solid #e2e8f0", color: "#64748b", fontWeight: 600 },
-  td: { padding: "8px 10px", borderBottom: "1px solid #f1f5f9" },
+  th: { textAlign: "left", padding: "8px 10px", borderBottom: "2px solid var(--line)", color: "var(--muted)", fontWeight: 600 },
+  td: { padding: "8px 10px", borderBottom: "1px solid var(--line)", color: "var(--text)" },
 };

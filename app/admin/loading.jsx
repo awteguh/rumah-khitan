@@ -16,13 +16,13 @@ const wrap = {
   alignItems: "center",
   justifyContent: "center",
   fontFamily: "system-ui, sans-serif",
-  color: "#475569",
+  color: "var(--muted)",
 };
 const spinner = {
   width: 40,
   height: 40,
-  border: "4px solid #e2e8f0",
-  borderTopColor: "#16a34a",
+  border: "4px solid var(--line)",
+  borderTopColor: "var(--green)",
   borderRadius: "50%",
   animation: "spin .8s linear infinite",
 };
