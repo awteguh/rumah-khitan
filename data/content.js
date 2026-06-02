@@ -102,7 +102,7 @@ export const pricing = [
   },
   {
     name: "Paket Home Service",
-    price: "Rp 1.5",
+    price: "Rp 2",
     unit: "jt",
     sub: "Khitan di Rumah Anda",
     features: ["Tim datang ke lokasi", "Metode klamp/laser", "Peralatan steril lengkap", "Bonus + kontrol gratis"],
