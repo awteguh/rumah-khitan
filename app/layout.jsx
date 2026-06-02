@@ -43,9 +43,10 @@ export const metadata = {
   icons: { icon: site.brand.logo },
 };
 
-// Skrip kecil yang berjalan SEBELUM halaman tampil, agar tema (terang/gelap)
-// langsung benar tanpa "berkedip". Mengikuti pilihan tersimpan atau setelan HP.
-const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(!t){t=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
+// Skrip kecil yang berjalan SEBELUM halaman tampil, agar tema langsung benar
+// tanpa "berkedip". Default selalu TERANG; mode gelap hanya jika pengunjung
+// pernah menekan tombol 🌙 sendiri (pilihannya tersimpan di browser).
+const themeScript = `(function(){try{var t=localStorage.getItem('theme')==='dark'?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();`;
 
 export default function RootLayout({ children }) {
   return (
