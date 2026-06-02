@@ -16,7 +16,7 @@ export default function AdminPage() {
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}`}</style>
       <div style={header}>
         <div>
-          <h1 style={h1}>📊 Dashboard Pengunjunggggg</h1>
+          <h1 style={h1}>📊 Dashboard Pengunju</h1>
           <p style={sub}>Rumah Khitan Abdunnafi' · waktu WIB</p>
         </div>
         <div style={actions}>
