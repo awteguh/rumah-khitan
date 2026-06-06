@@ -1,6 +1,7 @@
 import PromoBar from "@/components/PromoBar";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
+import BannerSlider from "@/components/BannerSlider";
 import TrustBar from "@/components/TrustBar";
 import Services from "@/components/Services";
 import Methods from "@/components/Methods";
@@ -21,6 +22,7 @@ export default function HomePage() {
       <PromoBar />
       <Navbar />
       <Hero />
+      <BannerSlider />
       <TrustBar />
       <Services />
       <Methods />
